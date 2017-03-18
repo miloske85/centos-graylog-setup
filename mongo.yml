@@ -1,0 +1,25 @@
+---
+#Install MongoDB
+- hosts: all
+  remote_user: root
+  tasks:
+      - name: Add repo
+        copy:
+            src: files/mongo-repo
+            dest: /etc/yum.repos.d/mongodb-org-3.2.repo
+            group: root
+            owner: root
+            mode: 0644
+      - name: Install MongoDB
+        yum:
+            name: mongodb-org
+            state: latest
+            update_cache: yes
+      - name: Set service (add)
+        command: chkconfig --add mongod
+      - name: Set service (reload daemon)
+        command: systemctl daemon-reload
+      - name: Set service (enable)
+        command: systemctl enable mongod.service
+      - name: Set service (start)
+        command: systemctl start mongod.service

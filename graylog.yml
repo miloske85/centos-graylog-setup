@@ -1,0 +1,27 @@
+---
+# Install graylog
+- hosts: all
+  remote_user: root
+  tasks:
+      - name: Add repository
+        command: rpm -Uvh https://packages.graylog2.org/repo/packages/graylog-2.1-repository_latest.rpm
+      - name: Install graylog
+        yum:
+            name: graylog-server
+            state: latest
+        # so far this is basic installation, nothing is set
+      - name: Copy config
+        copy:
+            src: files/server.conf
+            dest: /etc/graylog/server/server.conf
+            owner: root
+            group: root
+            mode: 0644
+      - name: add service
+        command: chkconfig --add graylog-server
+      - name: reload daemon
+        command: systemctl daemon-reload
+      - name: enable service
+        command: systemctl enable graylog-server.service
+      - name: start service
+        command: systemctl start graylog-server.service

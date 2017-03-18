@@ -1,0 +1,5 @@
+- include: basic-setup.yml
+- include: java.yml
+- include: elastic.yml
+- include: mongo.yml
+- include: graylog.yml

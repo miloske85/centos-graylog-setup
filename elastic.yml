@@ -1,0 +1,33 @@
+---
+# Install Elastic Search 2.x
+- hosts: all
+  remote_user: root
+  tasks:
+      - name: Install ES GPG key
+        command: rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+      - name: Add repo file
+        copy:
+            src: files/elasticsearch.repo
+            dest: /etc/yum.repos.d
+            owner: root
+            group: root
+            mode: 0644
+      - name: Install ES
+        yum:
+            name: elasticsearch
+            state: latest
+      - name: Configure ES
+        copy:
+            src: files/elasticsearch.yml
+            dest: /etc/elasticsearch/elasticsearch.yml
+            owner: root
+            group: elasticsearch
+            mode: 0750
+      - name: add service
+        command: chkconfig --add elasticsearch
+      - name: reload daemon
+        command: systemctl daemon-reload
+      - name: enable service
+        command: systemctl enable elasticsearch.service
+      - name: restart service
+        command: systemctl restart elasticsearch.service
